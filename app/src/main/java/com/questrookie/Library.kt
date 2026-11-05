@@ -1,6 +1,5 @@
 package com.questrookie
 
-import android.graphics.BitmapFactory
 import android.text.format.DateUtils
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.lazy.LazyRow
@@ -115,36 +114,12 @@ fun LibraryScreen(s: AppState) {
             }
     }
     val updates = remember(games, versions) { games.count { s.stateOf(it) == GameState.Update } }
-    // The store home shows rows above the grid; any search, filter or "See all" switches to the plain grid, and Back returns.
+    // The store home shows a shelf above each source's list; any search, filter or "See all" switches to the plain grid, and Back returns.
     val home = !browsing && query.isEmpty() && filter == null && source == "All" && !picking
     fun goHome() { browsing = false; query = ""; filter = null; source = "All"; sort = Sort.Recommended; picking = false; picked.clear() }
     BackHandler(enabled = !home) { goHome() }
-    val rows = remember(games, versions, s.favourites, s.hideAdult) { homeRows(games, s::stateOf, s.favourites, s.hideAdult, s.rookie.label.takeIf { s.rookie.mirrors.isNotEmpty() }) }
-    fun seeAll(kind: RowKind) {
-        browsing = true
-        when (kind) {
-            RowKind.Updates -> filter = Filter.Updates
-            // Recommended is the row's own order (newest first), so See all continues the row.
-            RowKind.New -> sort = Sort.Recommended
-            RowKind.Popular -> sort = Sort.Popular
-            RowKind.TopRated -> sort = Sort.Rating
-            RowKind.VRSrc -> source = s.rookie.label
-            RowKind.Favourites -> filter = Filter.Favourites
-        }
-    }
-    // Featured games need a real wide thumbnail, so candidates' image sizes are read (bounds only) off the main thread.
-    val heroes by produceState(emptyList<Game>(), games, versions) {
-        value = withContext(Dispatchers.IO) {
-            latestPerTitle(games).filter { s.stateOf(it) == GameState.NotInstalled }
-                .sortedByDescending { it.updated }.take(30)
-                .filter { g ->
-                    val f = s.thumbnail(g) ?: return@filter false
-                    val o = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                    BitmapFactory.decodeFile(f.path, o)
-                    isGoodThumbnail(o.outWidth, o.outHeight)
-                }.take(5)
-        }
-    }
+    val newest = remember(games, s.hideAdult) { newAndUpdated(games, s.hideAdult) }
+    val lists = remember(shown) { sourceLists(shown, setOf(s.rookie.label, TheVRSrc.name), s.rookie.mirrors.isNotEmpty()) }
     // Controllers start on the first game, not the search box, which would open the keyboard.
     val firstCard = remember { FocusRequester() }
     LaunchedEffect(games.isNotEmpty()) { runCatching { firstCard.requestFocus() } }
@@ -188,13 +163,8 @@ fun LibraryScreen(s: AppState) {
         val grid = rememberLazyGridState()
         // A new view (home, See all, another filter or search) starts at the top, not wherever the last one was scrolled to.
         LaunchedEffect(home, query, filter, source, sort) { grid.scrollToItem(0) }
-        AnimatedVisibility(!grid.canScrollBackward || grid.lastScrolledBackward) {
+        AnimatedVisibility(!home && (!grid.canScrollBackward || grid.lastScrolledBackward)) {
             Column(Modifier.fillMaxWidth().padding(bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            if (home) FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                rows.filter { it.games.isNotEmpty() }.forEach { r ->
-                    QChip(selected = false, onClick = { seeAll(r.kind) }, label = { Text(r.title) }, modifier = Modifier.focusRing(RoundedCornerShape(8.dp)))
-                }
-            }
             if (!home) FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 TextButton(::goHome, Modifier.align(Alignment.CenterVertically).focusRing(RoundedCornerShape(Radius.pill))) { Text("← Store") }
                 SortMenu(sort, Sort.entries, { it.label }) { sort = it }
@@ -224,19 +194,19 @@ fun LibraryScreen(s: AppState) {
             horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             if (home) {
-                // Controllers start on the hero, else the first row's first card.
-                if (heroes.isNotEmpty()) item(key = "hero", span = { GridItemSpan(maxLineSpan) }) { HeroCarousel(s, heroes, Modifier.focusRequester(firstCard)) { open = it } }
-                rows.forEachIndexed { i, r ->
-                    item(key = "row-${r.kind}", span = { GridItemSpan(maxLineSpan) }) {
-                        ShelfRow(s, r, if (i == 0 && heroes.isEmpty()) Modifier.focusRequester(firstCard) else Modifier, { seeAll(r.kind) }) { open = it }
+                // Controllers start on the shelf's first card.
+                if (newest.isNotEmpty()) item(key = "new", span = { GridItemSpan(maxLineSpan) }) {
+                    ShelfRow(s, "New & updated", newest, Modifier.focusRequester(firstCard), { browsing = true }) { open = it }
+                }
+                // Each source's own list, VRSrc first. One source needs no heading: it's the whole store.
+                lists.forEach { (name, list) ->
+                    if (lists.size > 1) item(key = "src-$name", span = { GridItemSpan(maxLineSpan) }) { SourceHeading(s, name, failed = list.isEmpty()) }
+                    itemsIndexed(list, key = { _, g -> "$name/${g.release}" }) { i, g ->
+                        GameCard(s, g, Modifier.staggered(i, g.release), selected = false) { open = g }
                     }
                 }
-                item(key = "browse-header", span = { GridItemSpan(maxLineSpan) }) {
-                    Text("Browse all", Modifier.padding(top = Space.md), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                }
-            }
-            itemsIndexed(shown, key = { _, g -> g.release }) { i, g ->
-                GameCard(s, g, (if (i == 0 && !home) Modifier.focusRequester(firstCard) else Modifier).staggered(i, g.release), selected = g.release in picked) {
+            } else itemsIndexed(shown, key = { _, g -> g.release }) { i, g ->
+                GameCard(s, g, (if (i == 0) Modifier.focusRequester(firstCard) else Modifier).staggered(i, g.release), selected = g.release in picked) {
                     if (picking) toggle(g) else open = g
                 }
             }
@@ -247,14 +217,27 @@ fun LibraryScreen(s: AppState) {
 
 /** A titled sideways row of cards with "See all", like a store shelf. [firstCard] lands on the row's first card. */
 @Composable
-private fun ShelfRow(s: AppState, row: HomeRow, firstCard: Modifier, onSeeAll: () -> Unit, onOpen: (Game) -> Unit) {
+private fun ShelfRow(s: AppState, title: String, games: List<Game>, firstCard: Modifier, onSeeAll: () -> Unit, onOpen: (Game) -> Unit) {
     Column(Modifier.padding(top = Space.sm)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(row.title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-            if (row.games.isNotEmpty()) TextButton(onSeeAll, Modifier.focusRing(RoundedCornerShape(Radius.pill))) { Text("See all") }
+            Text(title, Modifier.weight(1f), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            TextButton(onSeeAll, Modifier.focusRing(RoundedCornerShape(Radius.pill))) { Text("See all") }
         }
-        // Only the VRSrc row is ever empty: its list didn't load.
-        if (row.games.isEmpty()) Row(Modifier.padding(vertical = Space.md), verticalAlignment = Alignment.CenterVertically) {
+        // Vertical padding leaves room for the cards' glow and focus scale, which a lazy row would clip.
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(vertical = Space.md)) {
+            rowItemsIndexed(games, key = { _, g -> g.release }) { i, g ->
+                GameCard(s, g, (if (i == 0) firstCard else Modifier).width(220.dp), selected = false) { onOpen(g) }
+            }
+        }
+    }
+}
+
+/** A source's heading above its list. Only VRSrc's list is ever empty: it [failed] to load, so it says why. */
+@Composable
+private fun SourceHeading(s: AppState, name: String, failed: Boolean) {
+    Column(Modifier.padding(top = Space.md)) {
+        Text(name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+        if (failed) Row(Modifier.padding(vertical = Space.md), verticalAlignment = Alignment.CenterVertically) {
             val error = s.vrsrcError
             Text("Failed to load" + (error?.let { ": " + friendlyError(it) } ?: ""), Modifier.weight(1f, fill = false), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             // The full error, URL included, for pasting into a bug report or chat.
@@ -275,52 +258,6 @@ private fun ShelfRow(s: AppState, row: HomeRow, firstCard: Modifier, onSeeAll: (
                 TextButton({ s.refreshVrsrc() }, Modifier.focusRing(RoundedCornerShape(Radius.pill))) {
                     Text("Try again", color = MaterialTheme.colorScheme.primary)
                 }
-            }
-        }
-        // Vertical padding leaves room for the cards' glow and focus scale, which a lazy row would clip.
-        else LazyRow(horizontalArrangement = Arrangement.spacedBy(16.dp), contentPadding = PaddingValues(vertical = Space.md)) {
-            rowItemsIndexed(row.games, key = { _, g -> g.release }) { i, g ->
-                GameCard(s, g, (if (i == 0) firstCard else Modifier).width(220.dp), selected = false) { onOpen(g) }
-            }
-        }
-    }
-}
-
-/** Featured games, one big banner at a time, turning every 6 s; [modifier] (the first-focus target) goes on the page showing. */
-@Composable
-private fun HeroCarousel(s: AppState, games: List<Game>, modifier: Modifier, onOpen: (Game) -> Unit) {
-    val pager = rememberPagerState { games.size }
-    LaunchedEffect(pager, games.size) {
-        while (games.size > 1) {
-            kotlinx.coroutines.delay(6_000)
-            if (!pager.isScrollInProgress) pager.animateScrollToPage((pager.currentPage + 1) % games.size)
-        }
-    }
-    Column(verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-        HorizontalPager(pager, pageSpacing = 16.dp) { i -> FeaturedHero(s, games[i], if (i == pager.currentPage) modifier else Modifier, onOpen) }
-        if (games.size > 1) Row(Modifier.align(Alignment.CenterHorizontally), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-            repeat(games.size) { i ->
-                val on = i == pager.currentPage
-                Box(Modifier.size(if (on) 10.dp else 6.dp).clip(CircleShape).background(if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant))
-            }
-        }
-    }
-}
-
-/** One featured banner: always a real wide thumbnail, never a stretched icon. */
-@Composable
-private fun FeaturedHero(s: AppState, g: Game, modifier: Modifier, onOpen: (Game) -> Unit) {
-    val shape = RoundedCornerShape(Radius.card)
-    Box(modifier.fillMaxWidth().height(260.dp).clip(shape).focusRing(shape).clickable { onOpen(g) }) {
-        GameArt(s, g, Modifier.matchParentSize())
-        Box(Modifier.matchParentSize().background(Brush.horizontalGradient(0f to Color.Black.copy(alpha = .85f), .6f to Color.Transparent)))
-        Column(Modifier.align(Alignment.CenterStart).padding(Space.xxxl).widthIn(max = 480.dp), verticalArrangement = Arrangement.spacedBy(Space.sm)) {
-            Text("FEATURED · ${g.source.uppercase()}", color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-            Text(g.name, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold, maxLines = 2, overflow = TextOverflow.Ellipsis, color = Color.White)
-            Text("${g.sizeLabel} · updated ${g.updated.take(10)}", style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = .75f))
-            Row(Modifier.padding(top = Space.xs), horizontalArrangement = Arrangement.spacedBy(Space.md)) {
-                Button({ s.install(g) }, Modifier.height(Size.control).focusRing(RoundedCornerShape(Radius.pill))) { Text("Install") }
-                OutlinedButton({ onOpen(g) }, Modifier.height(Size.control).focusRing(RoundedCornerShape(Radius.pill))) { Text("Details", color = Color.White) }
             }
         }
     }
@@ -357,7 +294,7 @@ internal fun SourcesDialog(s: AppState, onClose: () -> Unit) {
                 CATALOGS.forEach { Text("${it.name} · built in", style = MaterialTheme.typography.bodyMedium) }
                 (s.catalogs.filterIsInstance<RepoCatalog>().map { it.name to it.url } + s.extras.map { it.label to it.baseUri }).forEach { (label, where) ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("$label · $where", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, maxLines = 1)
+                        Text("$label · $where", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, maxLines = 1, softWrap = false, overflow = TextOverflow.Ellipsis)
                         TextButton({ s.removeSource(label) }, Modifier.focusRing(RoundedCornerShape(24.dp))) { Text("Remove", color = MaterialTheme.colorScheme.error) }
                     }
                 }

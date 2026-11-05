@@ -28,31 +28,20 @@ fun isGoodThumbnail(w: Int, h: Int) = w >= 400 && w >= h * 1.3f
 fun latestPerTitle(games: List<Game>): List<Game> =
     games.groupBy { it.source to it.pkg }.values.map { l -> l.maxBy { it.version.toLongOrNull() ?: 0 } }
 
-enum class RowKind { Updates, New, Popular, TopRated, VRSrc, Favourites }
-
-class HomeRow(val kind: RowKind, val title: String, val games: List<Game>)
-
 private const val ROW_SIZE = 20
 
+/** The store home's one shelf: the newest titles across every source. */
+fun newAndUpdated(games: List<Game>, hideAdult: Boolean) =
+    latestPerTitle(games).filter { !(hideAdult && it.isAdult) }.sortedByDescending { it.updated }.take(ROW_SIZE)
+
 /**
- * The store home's rows, in display order. Empty rows are dropped, except the VRSrc row when its mirror is set up
- * ([vrsrc] is that source's label): empty there means its list failed to load. With VRSrc as the only source its row
- * would repeat "New & updated", so then it only shows to report that failure.
+ * The store home's lists under the shelf, one per source, VRSrc's first. [vrsrc] is the source labels VRSrc's games carry;
+ * while [vrsrcSetUp] its list stays even when empty, so the home can say it failed to load.
  */
-fun homeRows(games: List<Game>, stateOf: (Game) -> GameState, favourites: Set<String>, hideAdult: Boolean, vrsrc: String? = null): List<HomeRow> {
-    val pool = latestPerTitle(games).filter { !(hideAdult && it.isAdult) }
-    val vrsrcOnly = pool.all { it.source == vrsrc || it.source == TheVRSrc.name }
-    val newest = pool.sortedByDescending { it.updated }
-    return listOf(
-        HomeRow(RowKind.Updates, "Updates for you", pool.filter { stateOf(it) == GameState.Update }),
-        HomeRow(RowKind.New, "New & updated", newest),
-        HomeRow(RowKind.Popular, "Popular", pool.filter { it.popularity > 0 }.sortedByDescending { it.popularity }),
-        HomeRow(RowKind.TopRated, "Top rated", pool.filter { it.rating > 0 && it.ratingCount >= 5 }.sortedWith(compareByDescending<Game> { it.rating }.thenByDescending { it.ratingCount })),
-        HomeRow(RowKind.VRSrc, "VRSrc", newest.filter { it.source == vrsrc }),
-        HomeRow(RowKind.Favourites, "Your favourites", newest.filter { it.pkg in favourites }),
-    ).map { HomeRow(it.kind, it.title, it.games.take(ROW_SIZE)) }.filter { r ->
-        if (r.kind == RowKind.VRSrc) vrsrc != null && (r.games.isEmpty() || !vrsrcOnly) else r.games.isNotEmpty()
-    }
+fun sourceLists(games: List<Game>, vrsrc: Set<String>, vrsrcSetUp: Boolean): List<Pair<String, List<Game>>> {
+    val bySource = games.groupBy { if (it.source in vrsrc) "VRSrc" else it.source }
+    val own = bySource["VRSrc"].orEmpty()
+    return listOfNotNull(("VRSrc" to own).takeIf { vrsrcSetUp || own.isNotEmpty() }) + bySource.filterKeys { it != "VRSrc" }.toList()
 }
 
 /** Browse all's default order: newest first. */

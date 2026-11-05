@@ -42,29 +42,20 @@ class StoreLogicTest {
         Game(name, "$name v1 ($source)", "pkg.$name", "1", updated, "1.0", popularity = pop, source = source, rating = rating, ratingCount = count)
 
     @Test
-    fun homeRowsDropEmptyRows() {
-        val games = listOf(
-            g("Rp", "Repo", updated = "2026-06-01"),
-            g("Mx", "Mirror", pop = 9.0, rating = 4.5, count = 10),
-            g("Low", "Mirror", rating = 5.0, count = 2),
-        )
-        val rows = homeRows(games, { if (it.name == "Mx") GameState.Update else GameState.NotInstalled }, favourites = emptySet(), hideAdult = true)
-        assertEquals(listOf(RowKind.Updates, RowKind.New, RowKind.Popular, RowKind.TopRated), rows.map { it.kind })
-        assertEquals(listOf("Rp", "Mx", "Low"), rows.first { it.kind == RowKind.New }.games.map { it.name })
-        assertEquals(listOf("Mx"), rows.first { it.kind == RowKind.TopRated }.games.map { it.name })
+    fun newAndUpdatedIsNewestFirstAcrossSources() {
+        val games = listOf(g("Old", "Mirror", "2025-01-01"), g("New", "Repo", "2026-06-01"), g("Ad (18+)", "Mirror", "2026-12-01"))
+        assertEquals(listOf("New", "Old"), newAndUpdated(games, hideAdult = true).map { it.name })
     }
 
     @Test
-    fun vrsrcRowShowsBesideOtherSourcesOrWhenItFailed() {
-        val sq = g("Rp", "Repo")
-        val rows = homeRows(listOf(sq, g("Mx", "Mirror")), { GameState.NotInstalled }, emptySet(), hideAdult = false, vrsrc = "Mirror")
-        assertEquals(listOf("Mx"), rows.first { it.kind == RowKind.VRSrc }.games.map { it.name })
-        // Mirror set up but its list didn't load: the row stays, empty, so the home can say so.
-        assertTrue(homeRows(listOf(sq), { GameState.NotInstalled }, emptySet(), false, vrsrc = "Mirror").first { it.kind == RowKind.VRSrc }.games.isEmpty())
-        // VRSrc as the only source: its row would repeat "New & updated", so it's left out.
-        assertTrue(homeRows(listOf(g("Mx", "Mirror")), { GameState.NotInstalled }, emptySet(), false, vrsrc = "Mirror").none { it.kind == RowKind.VRSrc })
-        // No mirror set up: no row.
-        assertTrue(homeRows(listOf(sq), { GameState.NotInstalled }, emptySet(), false).none { it.kind == RowKind.VRSrc })
+    fun sourceListsPutVrsrcFirstAndKeepItWhenItFailed() {
+        val rp = g("Rp", "Repo"); val mx = g("Mx", "Mirror"); val tv = g("Tv", "TheVRSrc")
+        val vrsrc = setOf("Mirror", "TheVRSrc")
+        assertEquals(listOf("VRSrc" to listOf(mx, tv), "Repo" to listOf(rp)), sourceLists(listOf(rp, mx, tv), vrsrc, vrsrcSetUp = true))
+        // Set up but its list didn't load: the empty VRSrc list stays, so the home can say so.
+        assertEquals(listOf("VRSrc" to emptyList<Game>(), "Repo" to listOf(rp)), sourceLists(listOf(rp), vrsrc, vrsrcSetUp = true))
+        // Not set up: only the other sources.
+        assertEquals(listOf("Repo" to listOf(rp)), sourceLists(listOf(rp), vrsrc, vrsrcSetUp = false))
     }
 
     @Test
