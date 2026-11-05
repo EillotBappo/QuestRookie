@@ -145,7 +145,10 @@ fun TweaksScreen(s: AppState) {
             while (true) { kotlinx.coroutines.delay(5_000); value = currentRefreshRate(s.ctx) }
         }
         ScreenHeader("Settings", "${MODEL.name}" + (rate?.let { " · running at $it Hz" } ?: "") + " · re-applied after each reboot") {
-            PresetButtons(s, values)
+            // One pill, not a button per preset: four buttons beside the vitals squeezed the last one into a column.
+            DropPill(PRESETS.map { "Preset: ${it.first}" to it.first }, matchingPreset { values[it.key].orEmpty() } ?: "Preset: Custom", Modifier.width(240.dp), enabled = s.busy == null) { name ->
+                applyPreset(s, values, name, PRESETS.first { it.first == name }.second)
+            }
             // Tweaks go over ADB, so this stays in the header instead of a banner that eats the list's space.
             if (!s.installer.connected) FilledTonalButton({ connect(s) }, Modifier.focusRing(RoundedCornerShape(24.dp))) { Text("Connect ADB") }
         }
