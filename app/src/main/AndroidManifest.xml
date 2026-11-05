@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Wi-Fi only downloads check which network is active. -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- List installed apps for library shortcuts -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- Local files scans shared storage for APKs. Android only grants the app-op if this is declared. -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <!-- Last played sort. Granted to the app over ADB from the Installed tab. -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <!-- Keeps the shortcut server from being frozen while the browser is in front -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- APK-only installs without ADB, through Android's own installer (it asks the user to confirm). -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <application
+        android:label="QuestRookie"
+        android:usesCleartextTraffic="true"
+        android:theme="@android:style/Theme.Material.NoActionBar">
+        <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Opened by the web shortcut in web/ (see Shortcuts.kt) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="questrookie" />
+            </intent-filter>
+        </activity>
+        <service android:name=".KeepAliveService" android:exported="false" />
+        <receiver android:name=".PackageInstall$Receiver" android:exported="false" />
+    </application>
+</manifest>

@@ -1,0 +1,60 @@
+{
+  "apps": [
+    {
+      "id": "com.meta.appcenter",
+      "name": "App Center (Meta)",
+      "icon": "https://cdn.roblox.com/webstudio-cdn/v2/734591/icon_60x.png",
+      "versionName": "1.0.0",
+      "fileUrl": "https://dl.meta.appcenter.io/com.meta.appcenter.apk"
+    },
+    {
+      "id": "com.rovio.balls",
+      "name": "Angry Birds Dream Blast VR",
+      "icon": "https://play-lh.googleusercontent.com/ANGRY_BIRDS_DREAM_BLAST/icon_512.png",
+      "versionName": "1.23.0",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/angrybirds_dreamblast.apk"
+    },
+    {
+      "id": "com.ea.game.pvzheroes_row",
+      "name": "Plants vs Zombies Heroes VR",
+      "icon": "https://play-lh.googleusercontent.com/PVZ_HEROES/icon_512.png",
+      "versionName": "3.45.0",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/pvz_heroes.apk"
+    },
+    {
+      "id": "com.supercell.clashroyale",
+      "name": "Clash Royale VR Edition",
+      "icon": "https://play-lh.googleusercontent.com/CLASH_ROYALE/icon_512.png",
+      "versionName": "18.0.3",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/clash_royale.apk"
+    },
+    {
+      "id": "com.mojang.minecraftpe",
+      "name": "Minecraft VR Bedrock",
+      "icon": "https://play-lh.googleusercontent.com/MINECRAFT_PE/icon_512.png",
+      "versionName": "1.20.80",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/minecraft_bedrock.apk"
+    },
+    {
+      "id": "com.tencent.ig",
+      "name": "PUBG Mobile VR",
+      "icon": "https://play-lh.googleusercontent.com/PUBG_MOBILE/icon_512.png",
+      "versionName": "2.9.0",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/pubg_mobile.apk"
+    },
+    {
+      "id": "com.activision.callofduty.shooter",
+      "name": "Call of Duty Mobile VR",
+      "icon": "https://play-lh.googleusercontent.com/COD_MOBILE/icon_512.png",
+      "versionName": "9.3.0",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/cod_mobile.apk"
+    },
+    {
+      "id": "com.kiloo.subwaysurf",
+      "name": "Subway Surfers VR",
+      "icon": "https://play-lh.googleusercontent.com/SUBWAY_SURFERS/icon_512.png",
+      "versionName": "3.47.1",
+      "fileUrl": "https://gstatic.com/androidpolice/apks/subway_surfers.apk"
+    }
+  ]
+}

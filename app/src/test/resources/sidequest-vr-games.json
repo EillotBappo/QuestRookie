@@ -1,0 +1,921 @@
+{
+  "repo": {
+    "timestamp": 1502257810365,
+    "version": 21,
+    "name": "VR Games",
+    "icon": "vrgames.png",
+    "address": "https://the-expanse.github.io/SideQuestRepos/vr-games/",
+    "description": "Some great VR games! Launch these from the unknown sources list for now."
+  },
+  "requests": {
+    "install": [],
+    "uninstall": []
+  },
+    "apps": [
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Social VR"
+            ],
+            "suggestedVersionName": "0.1.18",
+            "suggestedVersionCode": "282",
+            "description": "We aim to expose as much possibilities as safely possible to be able to create experiences. There are guidelines to help created content to be accessible on as many platforms as possible with mobile and performance the main driver. Great content will be featured in the menu to be visited at the click of a button",
+            "issueTracker": "https://theexpanse.app/support/",
+            "license": "FREE",
+            "name": "The Expanse",
+            "sourceCode": "",
+            "summary": "The Expanse is a cross platform social vr app that will be available on all major headsets and 2d Mode for PC. ",
+            "webSite": "https://theexpanse.app",
+            "added": 1502257684722,
+            "icon": "expanse.jpg",
+            "packageName": "app.theexpanse.app",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "Deisim is a modern take on classic god games like populous or black and white but designed with roomscale VR in mind.<br><br>You can build you own world from scratch and help mankind to evolve from the stone age to the industrial revolution. <br>Perform miracles and provide them the needed resources or make them suffer with disasters.<br><br>You can do what you want in Deisim. You are in charge and nobody will judge your actions, <br>but you must take care of the heresy slowly corrupting your people and converting them to the false god.<br><br>You are the all mighty, but humans are the source of your power.",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Deisim",
+            "sourceCode": "",
+            "summary": "The virtual reality god simulator",
+            "webSite": "http://www.deisim.com/",
+            "added": 1559229168000,
+            "icon": "Deisim-SideQuest.png",
+            "packageName": "com.MyronSoftware.Deisim",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Exploration", "Adventure", "Mini-Games", "kids", "child", "animals", "forest", "magic"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "Users can pickup magical wands, collect magic eggs, catch butterflies, shoot basketball hoops, play ring toss, tee ball, golf, fruit toss, feed animals, go underwater with fish, collect starfish, play music instruments, and more! <br><br>This is a direct port of the Camp Magic Rift version. The Rift version is also available to play and runs great on minimum spec PCs. <br><br>The Quest version still needs some optimizing, I was able to drop the draw calls from 1275 to 436 and get it to be playable, there is still room for improvement of course.<br><br>I wanted to put this out there as a Beta for users to play, give feedback, and possibly donate if they liked the experience. <br><br>Developed by Fred Beahm, Music by Yao Wang",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Camp Magic",
+            "sourceCode": "",
+            "summary": "Camp Magic is a magical forest that users can visit to play, relax, and have fun.",
+            "webSite": "http://www.fredbeahm.com/#/camp-magic/",
+            "added": 1559229168000,
+            "icon": "magic.png",
+            "packageName": "com.spliced.magicalforest",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "You will blast your way through DogCorp with a straightforward goal in mind... TO GET BACK YOUR DOG! He was taken, and it's up to you as his owner to bring him home safely, but they won't go down without a fight! This game also features an incredibly unique 1:1 real-world  Movement system for enhanced immersion. (walk around)",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "DogCorp",
+            "sourceCode": "",
+            "summary": "A Short VR experience about rescuing your dog!",
+            "webSite": "https://handleyshelton.itch.io/",
+            "added": 1559229168000,
+            "icon": "dogcorp.png",
+            "packageName": "com.oculus.DogCorp",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": ". This release brings some new features:Bullet-Time VR Mode: a blatant display of plagiarism, time progresses as you move yourself or your weapon, inspired by the Quake Mod SUPERQOT (courtesy of the SUPERHOT team) 3DoF weapon mode for those that don't like the slight movement 6DoF weapon introduced and fixes to a few things:Text Input now correctly allows you to join a multiplayer game (for more info on using text input, please see release notes for v1.1.0). Weapon scaling improvements",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "QuakeQuest",
+            "sourceCode": "",
+            "summary": "Classic Quake like you've never played before",
+            "webSite": "https://quakevr.com/",
+            "added": 1559229168000,
+            "icon": "QuakeQuest.jpg",
+            "packageName": "com.drbeef.quakequest",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Roguelite Shooter"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "Travel using your own feet into the depths of an AI temple. Doesn't matter how much space do you have, the game will try to make the most of it and will fit the procedurally generated worlds in the space you have.",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Tea For God (Under Development)",
+            "sourceCode": "",
+            "summary": "Roguelite shooter that uses impossible spaces",
+            "webSite": "https://void-room.itch.io/tea-for-god",
+            "added": 1559229168000,
+            "icon": "teaforgod512.jpg",
+            "packageName": "com.voidroom.TeaForGod",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Horror VR"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "You better dig fast and escape! Prepare your mind for hordes of scary monsters, that are crawling through an old mine, trying to get you! You are equipped with nothing more than a pickaxe and bomb for each of the five nights. You have to get to the end of tunnel as soon as possible and not get eaten alive! While also taking care of another room with oxygen generator. Watch out for the electric blackout.",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Horror Nights Story (Quest)",
+            "sourceCode": "",
+            "summary": "Dig and find freedom through old mine,while running away from horde of monsters!",
+            "webSite": "https://paperbunker.cz/",
+            "added": 1559229168000,
+            "icon": "HorrorNightsStory.jpg",
+            "packageName": "cz.paperbunker.horrornights",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "We are creating VR exhibition spaces for galleries, auction houses, museums, collectors and artists. You can host private or public exhibitions, opening receptions, do guided tours of collections and sell artworks in virtual reality with Art Gate VR.",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Art Gate",
+            "sourceCode": "",
+            "summary": "Unlock The Artworld",
+            "webSite": "https://artgatevr.com/",
+            "added": 1559229168000,
+            "icon": "ArtGate_Hero.png",
+            "packageName": "com.BMINC.ArtGateVR",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "QuakeGo",
+            "sourceCode": "",
+            "summary": "Classic Quake like you've never played before",
+            "webSite": "https://quakevr.com/",
+            "added": 1559229168000,
+            "icon": "QuakeQuest.jpg",
+            "packageName": "com.drbeef.quakegvr",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "VR Games"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "Relax while completing beautifully detailed spherical jigsaws on your Oculus Quest. The new way to experience a traditional puzzle.<br><br>This is a demo for the Quest, the full version is available on itch.io and can be installed using SideQuest. Tweet me @JumbliVR if you enjoy the Quest version.<br><br>Only possible in VR. Find yourself stood inside the jigsaw. Use your tracked controllers to precisely place your pieces as you build the spherical puzzle. Rotate the jigsaw and scene to see it from different angles or simply walk around the jigsaw. Traditional flat jigsaws are also included.",
+            "issueTracker": "",
+            "license": "DEMO",
+            "name": "Jigsaw 360 (Quest)",
+            "sourceCode": "",
+            "summary": "Relax while completing beautifully detailed spherical jigsaws on your Oculus Quest in this free demo. Full version also available.",
+            "webSite": "https://jumblivr.itch.io/jigsaw-360",
+            "added": 1502257684722,
+            "icon": "jigsaw.png",
+            "packageName": "com.JumbliVR.Jigsaw360",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Shooter VR"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "Duty calls! You're put in the middle of the action. It's a dirty job but someone has to do it. Together with a SWAT team you will have to deal with the situation and take care of the terrorists who are robbing the bank. Your mission is cristal clear: finish off all hostile elements and keep your teammates and hostages alive. Make your away through bank to the safe where the terrorist have made a stronghold and threaten to kill the hostages if their demands are not met. Be aware of your ammunition and take cover while reloading your gun or you will be exposed and is over: maybe you see the bullet comming, maybe you didn't, but the terrorist got away and your partners now have the unpleasant task of giving the bad news to your nearest relative. You got the highest rates at the academy, it's time to prove it! ",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Crisis VRigade",
+            "sourceCode": "",
+            "summary": "Crisis VRigade is a virtual reality action filled first person shooter that lets players take on the role of a SWAT trooper and deal with terrorist situations",
+            "webSite": "http://crisisvrigade.com",
+            "added": 1502257684722,
+            "icon": "crisis_icon.png",
+            "packageName": "com.sumalab.CrisisVRigade",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Simulation"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "BRING IT DOWN! challenges the player to demolish structures given a limited supply of explosives. Your grasp on physics will be heavily disputed as you make your way through a variety of levels.",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "BRING IT DOWN!",
+            "sourceCode": "",
+            "summary": "Become an explosives and demolition expert and raze some buildings!",
+            "webSite": "",
+            "added": 1502257684722,
+            "icon": "bringitdown.png",
+            "packageName": "com.mirrorqueen.bringitdown",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Baseball Simulation Minigames"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "3 Inning Baseball, Home Run Derby, Catching, Umpire Simulator, and Shooting all included.  There is a hard mode with pitches up to 100 mph.  #HomePlateBaseball, @Beep2Bleep, Web@Beep2Bleep.com",
+            "issueTracker": "",
+            "license": "FREE only while in Alpha",
+            "name": "Home Plate Baseball",
+            "sourceCode": "",
+            "summary": "Home Plate Baseball is a baseball simulator and mini-game collection for VR HMD with motion controllers.",
+            "webSite": "",
+            "added": 1502257684722,
+            "icon": "homeplate.png",
+            "packageName": "com.Beep2Bleep.HomePlateBaseball",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS/ Adventure"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "After getting lost in the wrong levels for an eternity I came to a new unknown area, where ancient constructions and technology meets without a reason. Again the same questions unanswered. Who had built this world apparently abandoned? what was my role in all this? I have to find out...",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Wrong Voyage Ex Quest",
+            "sourceCode": "",
+            "summary": "Wrong Voyage Ex is a FPS/ exploration/ easy-puzzle hybrid game, with free intense locomotion, using a pixelated retro style.",
+            "webSite": "",
+            "added": 1502257684722,
+            "icon": "wrong-voyage.png",
+            "packageName": "com.Fguillotine.WrongV_EX_Quest",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Action"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "Hardlight Blade is an arcade-style hack and slash arena game. Use the controller like a real sword to swing and cut through robotic enemies. Features: - Wield sci-fi weapons and slice up robots. They dynamically split into pieces based on your motions! Slice them quickly with the blade, or fling your axe at them, you have multiple options for taking down these bad bots. - Deflect laser blasts right back at your foes, and block their swords as they attempt to cut you up too! - Free movement! Use the thumbstick to move around the arena to escape, engage or dodge enemies. (If you're prone to motion sickness, the game can be played entirely stationary) - Global Leaderboard for each difficulty level Face down these insidious bots and aim for the high score. Pass the headset around to your friends and see who can survive the longest!",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Hardlight Blade",
+            "sourceCode": "",
+            "summary": "Wield a futuristic weapons of \"Hardlight\" and cut through hordes of bloodthirsty robots.",
+            "webSite": "",
+            "added": 1502257684722,
+            "icon": "hlb.png",
+            "packageName": "com.RJdoesVR.HardlightBladeQuest",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Demo"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "NOTICE: Please uninstall Tuscany VR if you see an error like <br><span class='chip'>INSTALL_FAILED_UPDATE_INCOMPATIBLE...</span><br><br>A little something I have just posted on the quest facebook group in case anyone is interested.<br><br>I bought a unity asset a while ago called pinball creator and never really got round to creating anything. Anyway it came with a demo table ready for mobile but not ready for VR.<br><br>So all I have done is add the ovr camera and set the controller buttons so that you can play. Its 6dof so you can be as close as you want to the table.<br><br>Keys are<br><br>Left Controller Trigger - Left Flipper<br><br>Right Controller Trigger - Right Flipper<br><br>A button - Start and Plunger<br><br>X Button - Pause/Unpause",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Octopus Quest Pinball",
+            "sourceCode": "",
+            "summary": "Pinball in VR on Quest",
+            "webSite": "https://www.reddit.com/r/OculusQuest/comments/bxk7bu/octopus_pinball/",
+            "added": 1502257684722,
+            "icon": "octopus_island.png",
+            "packageName": "com.octopus.island",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Demo"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "Tuscany VR",
+            "sourceCode": "",
+            "summary": "Want to go to Tuscany? In HD? Then this is the VR app for you! ",
+            "webSite": "",
+            "added": 1502257684722,
+            "icon": "tuscany.webp",
+            "packageName": "com.oculus.UnitySample",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Social VR"
+            ],
+            "suggestedVersionName": "0.0.1",
+            "suggestedVersionCode": "282",
+            "description": "",
+            "issueTracker": "",
+            "license": "FREE",
+            "name": "AltspaceVR",
+            "sourceCode": "",
+            "summary": "Meet people from around the world, attend free live events, and play interactive games with friends. Day or night, there’s always someone to hang out with. ",
+            "webSite": "https://altvr.com",
+            "added": 1502257684722,
+            "icon": "AltspaceVR-Women-In-VR-Meet-up.png",
+            "packageName": "com.altvr.AltspaceVR_Client",
+            "lastUpdated": 1502257746030
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "Games",
+                "Sports"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "Experience hockey in VR like you've never seen it before! Full-speed, 100% skill-based hockey. Play in cross-region multiplayer using single and dual-hand stick control, haptics, and more!",
+            "issueTracker": "http://www.electricfalcon.net/discord",
+            "license": "FREE",
+            "name": "Pick-up League Hockey",
+            "sourceCode": "",
+            "summary": "Pick-up League Hockey is a 3 vs 3 player multiplayer hockey simulator with realistic skating physics and a full size rink.",
+            "webSite": "http://www.electricfalcon.net/pickuphockey/",
+            "added": 1559229168000,
+            "icon": "logo-bg2.jpg",
+            "packageName": "net.electricfalcon.pickuphockeyvr",
+            "lastUpdated": 1559229168000
+        },
+        {
+            "antiFeatures": [],
+            "categories": [
+                "FPS"
+            ],
+            "suggestedVersionName": "1.13.00",
+            "suggestedVersionCode": "113",
+            "description": "This original Gear VR title is rumored to work just as well on Oculus Go. It ships with freedoom rather than the doom shareware. To play actual doom you need to copy the doom files onto it. It works on Quest and Go but requires a controller. ",
+            "issueTracker": "https://github.com/DrBeef/DoomGVR/issues",
+            "license": "GPL",
+            "name": "DoomGVR",
+            "sourceCode": "https://github.com/DrBeef/DoomGVR",
+            "summary": "Play the original freedoom on the Oculus Go headset",
+            "webSite": "https://github.com/DrBeef/DoomGVR",
+            "added": 1559229168000,
+            "icon": "splash.png",
+            "packageName": "com.drbeef.doomgvr",
+            "lastUpdated": 1559229168000
+        }
+    ],
+    "packages": {
+        "com.spliced.magicalforest": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://github.com/the-expanse/SideQuestRepos/releases/download/vMagicalForestQuest/MagicalForestQuest-Android-Shipping-armv7-es2.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.spliced.magicalforest",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+      "com.octopus.island": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://cdn.glitch.com/a00c6725-31d3-4dbe-b74c-c7fac4f360cf%2FOctopusQuestPinball.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.octopus.island",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1-OctopusQuestPinball",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            },
+            {
+                "added": 1559229168000,
+                "apkName": "https://cdn.glitch.com/a00c6725-31d3-4dbe-b74c-c7fac4f360cf%2FSkullQuestPinballCreator.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.octopus.island2",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.2-SkullQuestPinballCreator",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.oculus.DogCorp": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://www.dropbox.com/s/0prbsnbhar1od04/DogCorpV2.apk?dl=1",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.oculus.DogCorp",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.MyronSoftware.Deisim": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://github.com/TMaloteaux/deisim-quest/releases/download/v.ea.1.25/deisim.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.MyronSoftware.Deisim",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.voidroom.TeaForGod": [
+            {
+                "added": 1559229168000,
+                "apkName": "http://voidroom.com/download/tea.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.voidroom.TeaForGod",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "cz.paperbunker.horrornights": [
+            {
+                "added": 1559229168000,
+                "apkName": "http://paperbunker.cz/games/hns.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "cz.paperbunker.horrornights",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.BMINC.ArtGateVR": [
+            {
+                "added": 1559229168000,
+                "apkName": "http://artgatevr.com/app/APK/ArtGateVR_v2.0.8.3.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.BMINC.ArtGateVR",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.JumbliVR.Jigsaw360": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://s3-eu-west-1.amazonaws.com/share.jumblivr.com/VRnChill-Android-Shipping-armv7-es2.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.JumbliVR.Jigsaw360",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.0.1",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.sumalab.CrisisVRigade": [
+            {
+                "added": 1559229168000,
+                "apkName": "http://www.crisisvrigade.com/apk/crisisvrigade.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.sumalab.crisisvrigade",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.mirrorqueen.bringitdown": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://triverske.net/bid/bringitdown.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.mirrorqueen.bringitdown",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.Beep2Bleep.HomePlateBaseball": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://github.com/beep2bleep/HomePlateBaseballAlphaDistribution/releases/download/Alpha1/HomePlateBaseball_Quest_Alpha.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.Beep2Bleep.HomePlateBaseball",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.RJdoesVR.HardlightBladeQuest": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://cdn.glitch.com/11f1822b-df85-4880-afcf-fbe20f922fde%2FHardlightBladeQuest.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.RJdoesVR.HardlightBladeQuest",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "0.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.Fguillotine.WrongV_EX_Quest": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://cdn.glitch.com/7f1d6b69-ad67-4705-b86e-a2a1ce12092a%2FWrongVoyageEX_Quest_ENG.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.Fguillotine.WrongV_EX_Quest",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "1.3.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.oculus.UnitySample": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://cdn.glitch.com/3affca97-3aef-4548-90ef-972df300e7e1%2FTuscanyQuestv2.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.oculus.UnitySample",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "1.3.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.drbeef.quakegvr": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://github.com/DrBeef/QuakeGVR/releases/download/v1.3.4/quakegvr-v.1.3.4.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.drbeef.quakegvr",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "1.3.4",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.drbeef.quakequest": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://github.com/DrBeef/QuakeQuest/releases/download/v1.2.2/quakequest-1.2.2.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.drbeef.quakequest",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "1.2.2",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "com.drbeef.doomgvr": [
+            {
+                "added": 1559229168000,
+                "apkName": "https://github.com/DrBeef/DoomGVR/releases/download/v1.0.6/DoomGVR.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.drbeef.doomgvr",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "1.0.6",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "net.electricfalcon.pickuphockeyvr": [
+            {
+                "added": 1559229168000,
+                "apkName": "http://www.electricfalcon.net/quest/pulh-latest.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "net.electricfalcon.pickuphockeyvr",
+                "sig": "",
+                "size": 55156885,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 113,
+                "versionName": "1.13.00",
+                "uses-permission": [
+                    [
+                        "Microphone"
+                    ]
+                ]
+            }
+        ],
+        "com.altvr.AltspaceVR_Client": [  
+            {
+                "added": 1502257678527,
+                "apkName": "http://altvr.com/quest",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "com.altvr.AltspaceVR_Client",
+                "sig": "",
+                "size": 1302807,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 2,
+                "versionName": "3.2.10",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ],
+        "app.theexpanse.app": [
+            {
+                "added": 1502257678527,
+                "apkName": "https://cdn.theexpanse.app/TheExpanse.apk",
+                "hash": "",
+                "hashType": "sha256",
+                "minSdkVersion": "16",
+                "nativecode": [
+                    "armeabi-v7a"
+                ],
+                "packageName": "app.theexpanse.app",
+                "sig": "",
+                "size": 1302807,
+                "srcname": "",
+                "targetSdkVersion": "22",
+                "versionCode": 2,
+                "versionName": "0.1.18",
+                "uses-permission": [
+                    [
+                        "No permissions Listed...",
+                        null
+                    ]
+                ]
+            }
+        ]
+    }
+}
