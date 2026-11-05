@@ -28,18 +28,20 @@ fun isGoodThumbnail(w: Int, h: Int) = w >= 400 && w >= h * 1.3f
 fun latestPerTitle(games: List<Game>): List<Game> =
     games.groupBy { it.source to it.pkg }.values.map { l -> l.maxBy { it.version.toLongOrNull() ?: 0 } }
 
-enum class RowKind { Updates, New, Popular, TopRated, VRSrc, SideQuest, OpenSource, Favourites }
+enum class RowKind { Updates, New, Popular, TopRated, VRSrc, Favourites }
 
 class HomeRow(val kind: RowKind, val title: String, val games: List<Game>)
 
 private const val ROW_SIZE = 20
 
 /**
- * The store home's rows, in display order. F-Droid's phone apps never appear here; empty rows are dropped,
- * except the VRSrc row when its mirror is set up ([vrsrc] is that source's label): empty there means its list failed to load.
+ * The store home's rows, in display order. Empty rows are dropped, except the VRSrc row when its mirror is set up
+ * ([vrsrc] is that source's label): empty there means its list failed to load. With VRSrc as the only source its row
+ * would repeat "New & updated", so then it only shows to report that failure.
  */
 fun homeRows(games: List<Game>, stateOf: (Game) -> GameState, favourites: Set<String>, hideAdult: Boolean, vrsrc: String? = null): List<HomeRow> {
-    val pool = latestPerTitle(games).filter { it.source != FDroid.name && !(hideAdult && it.isAdult) }
+    val pool = latestPerTitle(games).filter { !(hideAdult && it.isAdult) }
+    val vrsrcOnly = pool.all { it.source == vrsrc || it.source == TheVRSrc.name }
     val newest = pool.sortedByDescending { it.updated }
     return listOf(
         HomeRow(RowKind.Updates, "Updates for you", pool.filter { stateOf(it) == GameState.Update }),
@@ -47,14 +49,14 @@ fun homeRows(games: List<Game>, stateOf: (Game) -> GameState, favourites: Set<St
         HomeRow(RowKind.Popular, "Popular", pool.filter { it.popularity > 0 }.sortedByDescending { it.popularity }),
         HomeRow(RowKind.TopRated, "Top rated", pool.filter { it.rating > 0 && it.ratingCount >= 5 }.sortedWith(compareByDescending<Game> { it.rating }.thenByDescending { it.ratingCount })),
         HomeRow(RowKind.VRSrc, "VRSrc", newest.filter { it.source == vrsrc }),
-        HomeRow(RowKind.SideQuest, "VR from SideQuest", newest.filter { it.source == SideQuest.name }),
-        HomeRow(RowKind.OpenSource, "Open-source picks", newest.filter { it.source == GitHubApps.name }),
         HomeRow(RowKind.Favourites, "Your favourites", newest.filter { it.pkg in favourites }),
-    ).map { HomeRow(it.kind, it.title, it.games.take(ROW_SIZE)) }.filter { it.games.isNotEmpty() || (it.kind == RowKind.VRSrc && vrsrc != null) }
+    ).map { HomeRow(it.kind, it.title, it.games.take(ROW_SIZE)) }.filter { r ->
+        if (r.kind == RowKind.VRSrc) vrsrc != null && (r.games.isEmpty() || !vrsrcOnly) else r.games.isNotEmpty()
+    }
 }
 
-/** Browse all's default order: titles made for the headset first, F-Droid's phone apps after; newest first within each. */
-fun recommended(games: List<Game>) = games.sortedWith(compareBy<Game> { it.source == FDroid.name }.thenByDescending { it.updated })
+/** Browse all's default order: newest first. */
+fun recommended(games: List<Game>) = games.sortedByDescending { it.updated }
 
 /** "Updated 3 weeks ago" from a yyyy-MM-dd date, store-style; the raw text when it doesn't parse, null when there's none. */
 fun updatedAgo(day: String, today: java.time.LocalDate): String? {

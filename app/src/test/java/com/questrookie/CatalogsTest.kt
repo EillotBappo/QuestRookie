@@ -1,7 +1,6 @@
 package com.questrookie
 
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -39,19 +38,6 @@ class CatalogsTest {
     }
 
     @Test
-    fun githubReleasePicksHintedApk() {
-        val json = """{"tag_name":"v12.2","published_at":"2026-09-12T10:00:00Z","assets":[
-            {"name":"app-root-release.apk","size":1048576,"browser_download_url":"https://gh/root.apk"},
-            {"name":"app-nonRoot-release.apk","size":2097152,"browser_download_url":"https://gh/nonroot.apk"},
-            {"name":"notes.txt","size":1,"browser_download_url":"https://gh/notes.txt"}]}"""
-        val g = parseRelease(json, "moonlight-stream/moonlight-android", "Moonlight", "nonRoot")!!
-        assertEquals("https://gh/nonroot.apk", g.apkUrl)
-        assertEquals("github:moonlight-stream/moonlight-android", g.pkg)
-        assertEquals("2026-09-12", g.updated)
-        assertNull(parseRelease("""{"tag_name":"x","assets":[]}""", "a/b", "B"))
-    }
-
-    @Test
     fun indexKeepsDescriptionAndScreenshotsAsDetails() {
         val index = """
             {"repo":{"address":"https://f-droid.org/repo"},
@@ -81,14 +67,6 @@ class CatalogsTest {
     }
 
     @Test
-    fun githubReleaseNotesBecomeWhatsNew() {
-        val json = """{"tag_name":"v1","body":"- Fixed things","assets":[{"name":"a.apk","size":1,"browser_download_url":"https://gh/a.apk"}]}"""
-        val details = HashMap<String, Details>()
-        parseRelease(json, "a/b", "B", details = details)
-        assertEquals("- Fixed things", details.getValue("github:a/b").whatsNew)
-    }
-
-    @Test
     fun oculusDbGivesPlainDescriptionGenresAndCover() {
         val json = """{"display_long_description":"# THE BEST\n\n**SLASH** the beats, see [site](https://x.y)","genre_names":["Rhythm","Action"],
             "publisher_name":"Beat Games","imageLink":"/cdn/images/123"}"""
@@ -109,13 +87,5 @@ class CatalogsTest {
         """.trimIndent()
         val g = parseIndexV1(index.reader(), "F-Droid", iconBase = "").single()
         assertEquals("https://f-droid.org/repo/org.example/en-US/fg.png", g.thumbUrl)
-    }
-
-    @Test
-    fun releaseNotesLoseMarkdownMarks() {
-        val json = """{"tag_name":"v1","body":"**Latest build for VR HUB**\n\n## Changes\n- OpenXR, see [notes](https://x.y)","assets":[{"name":"a.apk","size":1,"browser_download_url":"https://gh/a.apk"}]}"""
-        val details = HashMap<String, Details>()
-        parseRelease(json, "a/b", "B", details = details)
-        assertEquals("Latest build for VR HUB\n\nChanges\n- OpenXR, see notes", details.getValue("github:a/b").whatsNew)
     }
 }

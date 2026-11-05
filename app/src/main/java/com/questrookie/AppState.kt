@@ -41,6 +41,12 @@ class AppState(
         private set
     var games by mutableStateOf(rookie.games() + extras.flatMap { it.games() })
 
+    /** The built-in catalogs plus the F-Droid-style repos added in Sources, saved as name -> index URL. */
+    var catalogs by mutableStateOf(CATALOGS + savedRepos().let { o -> o.keys().asSequence().map { RepoCatalog(it, o.getString(it)) }.toList() })
+        private set
+    private val repoPrefs get() = ctx.getSharedPreferences("ui", Context.MODE_PRIVATE)
+    private fun savedRepos() = JSONObject(repoPrefs.getString("repos", null) ?: "{}")
+
     /** True until the built-in catalogs have loaded from cache; Library shows skeleton cards meanwhile. */
     var loadingCatalogs by mutableStateOf(true)
         private set
@@ -48,28 +54,43 @@ class AppState(
     init {
         // The F-Droid cache alone is ~1 MB of JSON; parsing it on the main thread froze startup for seconds.
         scope.launch {
-            val cached = withContext(Dispatchers.IO) { CATALOGS.flatMap { it.cached(rookie.root) } }
+            val cached = withContext(Dispatchers.IO) { catalogs.flatMap { it.cached(rookie.root) } }
             games = games + cached
             loadingCatalogs = false
         }
     }
 
-    /** The source a game downloads from. SideQuest games use the primary only for its plain HTTP download. */
+    /** The source a game downloads from. Catalog games use the primary only for its plain HTTP download. */
     fun sourceFor(g: Game) = extras.firstOrNull { it.label == g.source } ?: rookie
 
     fun thumbnail(g: Game) = sourceFor(g).thumbnail(g.pkg) ?: rookie.thumbnail(g.pkg)
 
     /** Store-page text and screenshots: a catalog's saved copy, or for mirror games OculusDB plus the mirror's own notes. Blocking. */
     fun details(g: Game): Details? {
-        CATALOGS.firstOrNull { it.name == g.source }?.let { return it.details(rookie.root, g.pkg) }
+        catalogs.firstOrNull { it.name == g.source }?.let { return it.details(rookie.root, g.pkg) }
         val notes = sourceFor(g).notes(g.release).orEmpty()
         return (oculusDb(ctx.cacheDir, g.pkg) ?: Details()).copy(whatsNew = notes).takeIf { it != Details() }
     }
 
-    /** Saves a new source; [input] is anything Setup accepts (a config.json URL, pasted JSON). Its games show after the next refresh. */
-    fun addSource(name: String, input: String, key: String) {
-        require(name.matches(Regex("[A-Za-z0-9 _.-]{1,24}")) && name != rookie.label && name != "SideQuest") { "Pick a short name, not Mirror or SideQuest" }
+    /**
+     * Saves a new source and says what happened. [input] is a repo's index-v1.json URL (its apps load right away),
+     * or anything Setup accepts (a config.json URL, pasted JSON), whose games show after the next refresh.
+     */
+    fun addSource(name: String, input: String, key: String): String {
+        require(name.matches(Regex("[A-Za-z0-9 _.-]{1,24}")) && name != rookie.label && catalogs.none { it.name == name }) { "Pick a short name no other source uses" }
         require(extras.none { it.label == name }) { "A source called $name already exists" }
+        val url = input.trim()
+        if (url.endsWith("index-v1.json")) {
+            require(url.startsWith("https://") || url.startsWith("http://")) { "Paste the repo's full http(s) link" }
+            val repo = RepoCatalog(name, url)
+            // refresh() falls back to the (empty) cache on any failure, so no apps means the link didn't work.
+            val list = repo.refresh(rookie.root)
+            require(list.isNotEmpty()) { "No apps found at that link" }
+            repoPrefs.edit().putString("repos", savedRepos().put(name, url).toString()).apply()
+            catalogs = catalogs + repo
+            games = games + list
+            return "Added $name · ${list.size} apps"
+        }
         val src = rookie.extra(name)
         try {
             src.saveConfig(input)
@@ -79,9 +100,14 @@ class AppState(
             throw e
         }
         extras = rookie.extras()
+        return "Added $name. Tap Refresh to load its games"
     }
 
     fun removeSource(name: String) {
+        if (catalogs.any { it.name == name && it is RepoCatalog }) {
+            repoPrefs.edit().putString("repos", savedRepos().apply { remove(name) }.toString()).apply()
+            catalogs = catalogs.filter { it.name != name }
+        }
         extras.firstOrNull { it.label == name }?.root?.deleteRecursively()
         extras = rookie.extras()
         games = games.filter { it.source != name }
@@ -238,7 +264,7 @@ class AppState(
         val (list, obb, usage) = withContext(Dispatchers.IO) {
             Triple(
                 // Mirror lists are games; the built-in catalogs (F-Droid above all) are mostly apps and tools.
-                installedApps(ctx, games.filter { g -> CATALOGS.none { it.name == g.source } }.mapTo(HashSet()) { it.pkg }),
+                installedApps(ctx, games.filter { g -> catalogs.none { it.name == g.source } }.mapTo(HashSet()) { it.pkg }),
                 if (installer.connected) runCatching { installer.obbSizes() }.getOrDefault(emptyMap()) else emptyMap(),
                 usageSince(0),
             )

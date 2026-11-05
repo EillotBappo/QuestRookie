@@ -124,20 +124,18 @@ fun LibraryScreen(s: AppState) {
         browsing = true
         when (kind) {
             RowKind.Updates -> filter = Filter.Updates
-            // Recommended is the row's own order (newest, F-Droid last), so See all continues the row instead of jumping to phone apps.
+            // Recommended is the row's own order (newest first), so See all continues the row.
             RowKind.New -> sort = Sort.Recommended
             RowKind.Popular -> sort = Sort.Popular
             RowKind.TopRated -> sort = Sort.Rating
             RowKind.VRSrc -> source = s.rookie.label
-            RowKind.SideQuest -> source = SideQuest.name
-            RowKind.OpenSource -> source = GitHubApps.name
             RowKind.Favourites -> filter = Filter.Favourites
         }
     }
     // Featured games need a real wide thumbnail, so candidates' image sizes are read (bounds only) off the main thread.
     val heroes by produceState(emptyList<Game>(), games, versions) {
         value = withContext(Dispatchers.IO) {
-            latestPerTitle(games).filter { it.source != FDroid.name && s.stateOf(it) == GameState.NotInstalled }
+            latestPerTitle(games).filter { s.stateOf(it) == GameState.NotInstalled }
                 .sortedByDescending { it.updated }.take(30)
                 .filter { g ->
                     val f = s.thumbnail(g) ?: return@filter false
@@ -163,12 +161,14 @@ fun LibraryScreen(s: AppState) {
             Box {
                 var more by remember { mutableStateOf(false) }
                 FilledTonalIconButton({ more = true }, Modifier.focusRing(CircleShape)) { Icon(Icons.Default.MoreVert, "More") }
+                var sourcesOpen by remember { mutableStateOf(false) }
                 DropdownMenu(more, { more = false }) {
-                    // StreamFlow's Surprise Me: a random title from whatever the filters show. On the home that's everything, and
-                    // F-Droid's phone apps would win nearly every time, so the home picks among headset titles you don't have yet.
-                    val pool = if (home) shown.filter { it.source != FDroid.name && s.stateOf(it) == GameState.NotInstalled }.ifEmpty { shown } else shown
+                    // StreamFlow's Surprise Me: a random title from whatever the filters show; the home picks among titles you don't have yet.
+                    val pool = if (home) shown.filter { s.stateOf(it) == GameState.NotInstalled }.ifEmpty { shown } else shown
                     if (pool.isNotEmpty()) DropdownMenuItem({ Text("Surprise me") }, { more = false; open = pool.random() })
+                    DropdownMenuItem({ Text("Sources") }, { more = false; sourcesOpen = true })
                 }
+                if (sourcesOpen) SourcesDialog(s) { sourcesOpen = false }
             }
         }
         // Skeleton cards while the built-in lists load from cache, so the page has its shape from the first frame.
@@ -328,7 +328,7 @@ private fun FeaturedHero(s: AppState, g: Game, modifier: Modifier, onOpen: (Game
 
 /** Built-in catalogs always refresh; each configured source refreshes on its own, and one failing keeps its last list without hiding the rest. */
 private fun refresh(s: AppState) = s.task("Downloading game list") {
-    val catalogs = CATALOGS.flatMap { s.busy = "Downloading ${it.name} list"; it.refresh(s.rookie.root) }
+    val catalogs = s.catalogs.flatMap { s.busy = "Downloading ${it.name} list"; it.refresh(s.rookie.root) }
     val failed = mutableListOf<String>()
     val fromSources = (listOf(s.rookie) + s.extras).filter { it.mirrors.isNotEmpty() }.flatMap { src ->
         runCatching {
@@ -355,10 +355,10 @@ internal fun SourcesDialog(s: AppState, onClose: () -> Unit) {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Mirror" + if (s.rookie.mirrors.isEmpty()) " (not set up)" else " · ${s.rookie.baseUri}", style = MaterialTheme.typography.bodyMedium)
                 CATALOGS.forEach { Text("${it.name} · built in", style = MaterialTheme.typography.bodyMedium) }
-                s.extras.forEach { src ->
+                (s.catalogs.filterIsInstance<RepoCatalog>().map { it.name to it.url } + s.extras.map { it.label to it.baseUri }).forEach { (label, where) ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text("${src.label} · ${src.baseUri}", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, maxLines = 1)
-                        TextButton({ s.removeSource(src.label) }, Modifier.focusRing(RoundedCornerShape(24.dp))) { Text("Remove", color = MaterialTheme.colorScheme.error) }
+                        Text("$label · $where", Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, maxLines = 1)
+                        TextButton({ s.removeSource(label) }, Modifier.focusRing(RoundedCornerShape(24.dp))) { Text("Remove", color = MaterialTheme.colorScheme.error) }
                     }
                 }
                 HorizontalDivider(Modifier.padding(vertical = 4.dp))
@@ -366,7 +366,7 @@ internal fun SourcesDialog(s: AppState, onClose: () -> Unit) {
                 // Up here, not under the fields: below them it scrolls out of sight on a short window.
                 if (error.isNotEmpty()) Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
                 OutlinedTextField(name, { name = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("Name, e.g. Pi") })
-                OutlinedTextField(input, { input = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("Config URL or JSON") }, placeholder = { Text("http://192.168.1.50:39457/config.json") })
+                OutlinedTextField(input, { input = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("Config URL or JSON, or a repo's index-v1.json link") }, placeholder = { Text("http://192.168.1.50:39457/config.json") })
                 OutlinedTextField(key, { key = it }, Modifier.fillMaxWidth(), singleLine = true, label = { Text("API key (optional)") })
             }
         },
@@ -375,9 +375,9 @@ internal fun SourcesDialog(s: AppState, onClose: () -> Unit) {
                 error = ""
                 s.task("Adding $name") {
                     // A failure stays in the dialog; a snackbar would sit behind it, out of sight.
-                    try { s.addSource(name.trim(), input, key) } catch (e: Exception) { error = "Couldn't add $name: " + friendlyError(e).replaceFirstChar(Char::lowercase); return@task "" }
+                    val added = try { s.addSource(name.trim(), input, key) } catch (e: Exception) { error = "Couldn't add $name: " + friendlyError(e).replaceFirstChar(Char::lowercase); return@task "" }
                     onClose()
-                    "Added $name. Tap Refresh to load its games"
+                    added
                 }
             }, Modifier.focusRing(RoundedCornerShape(24.dp)), enabled = name.isNotBlank() && input.isNotBlank() && s.busy == null) { Text("Add") }
         },

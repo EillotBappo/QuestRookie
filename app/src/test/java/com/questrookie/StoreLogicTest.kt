@@ -42,28 +42,27 @@ class StoreLogicTest {
         Game(name, "$name v1 ($source)", "pkg.$name", "1", updated, "1.0", popularity = pop, source = source, rating = rating, ratingCount = count)
 
     @Test
-    fun homeRowsSkipFDroidAndEmptyRows() {
+    fun homeRowsDropEmptyRows() {
         val games = listOf(
-            g("Fd", "F-Droid", updated = "2026-12-31"),
-            g("Sq", "SideQuest", updated = "2026-05-01"),
-            g("Gh", "GitHub", updated = "2026-06-01"),
+            g("Rp", "Repo", updated = "2026-06-01"),
             g("Mx", "Mirror", pop = 9.0, rating = 4.5, count = 10),
             g("Low", "Mirror", rating = 5.0, count = 2),
         )
         val rows = homeRows(games, { if (it.name == "Mx") GameState.Update else GameState.NotInstalled }, favourites = emptySet(), hideAdult = true)
-        assertTrue(rows.none { r -> r.games.any { it.source == "F-Droid" } })
-        assertEquals(listOf(RowKind.Updates, RowKind.New, RowKind.Popular, RowKind.TopRated, RowKind.SideQuest, RowKind.OpenSource), rows.map { it.kind })
-        assertEquals(listOf("Gh", "Sq", "Mx", "Low"), rows.first { it.kind == RowKind.New }.games.map { it.name })
+        assertEquals(listOf(RowKind.Updates, RowKind.New, RowKind.Popular, RowKind.TopRated), rows.map { it.kind })
+        assertEquals(listOf("Rp", "Mx", "Low"), rows.first { it.kind == RowKind.New }.games.map { it.name })
         assertEquals(listOf("Mx"), rows.first { it.kind == RowKind.TopRated }.games.map { it.name })
     }
 
     @Test
-    fun vrsrcRowShowsMirrorGamesOrStaysEmptyWhenItFailed() {
-        val sq = g("Sq", "SideQuest")
+    fun vrsrcRowShowsBesideOtherSourcesOrWhenItFailed() {
+        val sq = g("Rp", "Repo")
         val rows = homeRows(listOf(sq, g("Mx", "Mirror")), { GameState.NotInstalled }, emptySet(), hideAdult = false, vrsrc = "Mirror")
         assertEquals(listOf("Mx"), rows.first { it.kind == RowKind.VRSrc }.games.map { it.name })
         // Mirror set up but its list didn't load: the row stays, empty, so the home can say so.
         assertTrue(homeRows(listOf(sq), { GameState.NotInstalled }, emptySet(), false, vrsrc = "Mirror").first { it.kind == RowKind.VRSrc }.games.isEmpty())
+        // VRSrc as the only source: its row would repeat "New & updated", so it's left out.
+        assertTrue(homeRows(listOf(g("Mx", "Mirror")), { GameState.NotInstalled }, emptySet(), false, vrsrc = "Mirror").none { it.kind == RowKind.VRSrc })
         // No mirror set up: no row.
         assertTrue(homeRows(listOf(sq), { GameState.NotInstalled }, emptySet(), false).none { it.kind == RowKind.VRSrc })
     }
@@ -73,12 +72,6 @@ class StoreLogicTest {
         val old = g("A", "Mirror").copy(version = "3")
         val new = old.copy(version = "10", release = "A v10")
         assertEquals(listOf(new), latestPerTitle(listOf(old, new)))
-    }
-
-    @Test
-    fun recommendedPutsFDroidLastNewestFirst() {
-        val games = listOf(g("Fd", "F-Droid", "2026-12-01"), g("Old", "Mirror", "2025-01-01"), g("New", "SideQuest", "2026-06-01"))
-        assertEquals(listOf("New", "Old", "Fd"), recommended(games).map { it.name })
     }
 
     @Test

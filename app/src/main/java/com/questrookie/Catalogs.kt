@@ -52,69 +52,14 @@ data class Details(
     val genres: List<String> = emptyList(), val publisher: String = "", val cover: String = "", val whatsNew: String = "",
 )
 
-val CATALOGS: List<Catalog> = listOf(SideQuest, FDroid, GitHubApps, TheVRSrc)
+val CATALOGS: List<Catalog> = listOf(TheVRSrc)
 
-/** The free SideQuestRepos indexes. Glitch's CDN is shut down and androidapks.com re-hosts Play Store APKs; the nsfw index is never fetched. */
-object SideQuest : Catalog("SideQuest") {
-    private const val RAW = "https://raw.githubusercontent.com/the-expanse/SideQuestRepos/master"
-    private val CATEGORIES = listOf("vr-games", "vr-apps", "android-games", "android-apps")
-
-    override fun fetch(details: MutableMap<String, Details>) = CATEGORIES.flatMap { cat ->
-        URL("$RAW/$cat/index-v1.json").openStream().reader().use {
-            parseIndexV1(it, name, iconBase = "$RAW/$cat/icons/", skipHosts = listOf("cdn.glitch.com", "androidapks.com"), details = details)
-        }
-    }.ifEmpty { error("SideQuest returned no apps") }
-}
-
-/** F-Droid's main repo: free and open-source Android apps. Mostly phone apps; the source chip filters them. */
-object FDroid : Catalog("F-Droid") {
-    override fun fetch(details: MutableMap<String, Details>) = URL("https://f-droid.org/repo/index-v1.json").openStream().reader().use {
-        parseIndexV1(it, name, iconBase = "https://f-droid.org/repo/icons-640/", details = details)
-    }
-}
-
-/**
- * Hand-picked open-source Quest projects, each installed from its latest GitHub release.
- * GitHub doesn't say the package name, so these install without one (pkg is "github:owner/repo").
- */
-object GitHubApps : Catalog("GitHub") {
-    /** [hint] picks the right APK when a release has several; [blurb] is the store-page description (fetching each repo's would double the API calls). */
-    private class Project(val repo: String, val title: String, val hint: String, val blurb: String)
-
-    private val PROJECTS = listOf(
-        Project("alvr-org/ALVR", "ALVR (PC VR streaming)", "alvr_client_android", "Stream SteamVR games from your PC to the headset over Wi-Fi."),
-        Project("QuestCraftPlusPlus/QuestCraft", "QuestCraft", "", "Minecraft Java Edition running natively on the headset, in full VR."),
-        Project("threethan/LightningLauncher", "Lightning Launcher", "", "A fast, customisable launcher that lists every app, sideloaded ones included."),
-        Project("ComputerElite/QuestAppVersionSwitcher", "QuestAppVersionSwitcher", "", "Back up apps and their saves, and switch or downgrade between app versions."),
-        Project("moonlight-stream/moonlight-android", "Moonlight (game streaming)", "nonRoot", "Play PC games on a big screen in the headset, streamed from Sunshine or NVIDIA GameStream."),
-        Project("Basti564/Oculess", "Oculess", "", "Turn off Meta telemetry and other system features you don't want."),
-        Project("TeamNewPipe/NewPipe", "NewPipe", "", "A lightweight YouTube client with no ads and no Google services."),
-        // Team Beef ports: each needs the original game's data files copied to the headset.
-        Project("DrBeef/QuestZDoom", "QuestZDoom (Doom in VR)", "questzdoom-", "Doom, Doom II, Heretic and Hexen in full VR. Needs the original game files."),
-        Project("DrBeef/Doom3Quest", "Doom3Quest", "", "Doom 3 in VR with motion controls. Needs the original game files."),
-        Project("DrBeef/Lambda1VR", "Lambda1VR (Half-Life in VR)", "", "Half-Life in VR on the Xash3D engine. Needs the original game files."),
-        Project("DrBeef/Quake2Quest", "Quake2Quest", "", "Quake II in VR with motion controls. Needs the original game files."),
-        Project("DrBeef/RTCWQuest", "RTCWQuest (Wolfenstein in VR)", "", "Return to Castle Wolfenstein in VR. Needs the original game files."),
-        Project("Team-Beef-Studios/JKXR", "JKXR (Jedi Knight in VR)", "jkxr-", "Jedi Outcast and Jedi Academy in VR. Needs the original game files."),
-        Project("WiVRn/WiVRn", "WiVRn (PC VR streaming)", "", "Open-source PC VR streaming for Linux PCs, built on OpenXR."),
-        Project("Igalia/wolvic", "Wolvic (VR browser)", "oculusvr", "An open-source web browser made for VR headsets."),
-        Project("termux/termux-app", "Termux", "universal", "A Linux terminal and package manager on the headset."),
-        Project("RikkaApps/Shizuku", "Shizuku", "", "Lets other apps use ADB-level permissions without root."),
-        Project("emanuele-f/PCAPdroid", "PCAPdroid", "", "See and record which servers your apps talk to. No root needed."),
-        Project("PojavLauncherTeam/PojavLauncher", "PojavLauncher (Minecraft Java)", "", "Minecraft Java Edition launcher, played on a flat screen."),
-    )
-
-    override fun fetch(details: MutableMap<String, Details>) = PROJECTS.mapNotNull { p ->
-        val c = URL("https://api.github.com/repos/${p.repo}/releases/latest").openConnection() as HttpURLConnection
-        c.setRequestProperty("Accept", "application/vnd.github+json")
-        // GitHub allows 60 anonymous calls an hour. Hitting the limit (or losing the connection) mid-refresh would save a
-        // partial list, so give up instead and keep the last full one. A project without a usable release is just skipped.
-        if (c.responseCode == 403 || c.responseCode == 429) error("HTTP ${c.responseCode} from GitHub (rate limit)")
-        runCatching {
-            parseRelease(c.inputStream.bufferedReader().use { it.readText() }, p.repo, p.title, p.hint, details)
-                ?.also { g -> details[g.pkg] = (details[g.pkg] ?: Details()).copy(description = p.blurb) }
-        }.getOrNull()
-    }.ifEmpty { error("GitHub returned no releases") }
+/** A source added in Sources: any F-Droid-style repo's index-v1.json (SideQuestRepos uses the same format). */
+class RepoCatalog(name: String, val url: String) : Catalog(name) {
+    // SideQuestRepos still lists links on Glitch's shut-down CDN and Play Store re-hosts on androidapks.com.
+    override fun fetch(details: MutableMap<String, Details>) = URL(url).openStream().reader().use {
+        parseIndexV1(it, name, iconBase = url.substringBeforeLast('/') + "/icons/", skipHosts = listOf("cdn.glitch.com", "androidapks.com"), details = details)
+    }.ifEmpty { error("$name returned no apps") }
 }
 
 /**
@@ -168,23 +113,6 @@ object TheVRSrc : Catalog("TheVRSrc") {
             source = "TheVRSrc", apkUrl = apkUrl, iconUrl = iconUrl,
         )
     }
-}
-
-/** One latest-release response from the GitHub API, or null when it has no matching APK. Release notes go to [details]. */
-fun parseRelease(json: String, repo: String, title: String, hint: String = "", details: MutableMap<String, Details>? = null): Game? {
-    val r = JSONObject(json)
-    val assets = r.getJSONArray("assets")
-    val apk = List(assets.length()) { assets.getJSONObject(it) }
-        .filter { it.getString("name").endsWith(".apk") }
-        .let { l -> l.firstOrNull { hint.isNotEmpty() && hint in it.getString("name") } ?: l.firstOrNull() } ?: return null
-    val tag = r.getString("tag_name")
-    plainMarkdown(r.optString("body")).takeIf { it.isNotEmpty() }?.let { details?.put("github:$repo", Details(whatsNew = it)) }
-    return Game(
-        name = title, release = "$title $tag (GitHub)", pkg = "github:$repo", version = tag.removePrefix("v"),
-        updated = r.optString("published_at").take(10), sizeMb = mb(apk.optLong("size")),
-        source = "GitHub", apkUrl = apk.getString("browser_download_url"),
-        iconUrl = "https://github.com/${repo.substringBefore('/')}.png?size=256",
-    )
 }
 
 /**

@@ -265,7 +265,7 @@ private fun AutomationCard(s: AppState) {
 @Composable
 private fun SourcesCard(s: AppState) {
     var editing by remember { mutableStateOf(false) }
-    val names = listOfNotNull("Mirror".takeIf { s.rookie.mirrors.isNotEmpty() }) + CATALOGS.map { it.name } + s.extras.map { it.label }
+    val names = listOfNotNull("Mirror".takeIf { s.rookie.mirrors.isNotEmpty() }) + s.catalogs.map { it.name } + s.extras.map { it.label }
     SettingsCard("Sources", names.joinToString(", ")) {
         FilledTonalButton({ editing = true }, Modifier.focusRing(RoundedCornerShape(Radius.pill))) { Text("Manage sources") }
         FilledTonalButton({ Shortcuts.start(s.ctx); Shortcuts.openInBrowser(s.ctx) }, Modifier.focusRing(RoundedCornerShape(Radius.pill))) { Text("Shortcuts") }
